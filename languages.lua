@@ -4,7 +4,11 @@ strings =
 {
     ["us"] =
     {
-        startStop                       = "StartStop",
+        aLogin    		                = "LoginName",
+		aPassword  		                = "Password",
+		aAutologin 		                = "Autologin",
+		startStop                       = "StartStop",
+		aCharacter  			        = "Character",
         doPulse                         = "Pulse(Debug)",
         pulseTime                       = "Pulse Time (ms)",
         enableLog                       = "Enable Log",
@@ -349,6 +353,10 @@ strings =
     ["cn"] =                            
     {                               
         -- gw2.lua
+		aLogin    		                = "LoginName",
+		aPassword  		                = "Password",
+		aAutologin 		                = "Autologin",
+		aCharacter  			        = "Character",
         startStop                       = "开始/停止",
         doPulse                         = "暂停(调试)",
         pulseTime                       = "暂停时间 (ms)",
@@ -703,6 +711,10 @@ strings =
 	},
     ["jp"] =
     {
+		aLogin    		                = "LoginName",
+		aPassword  		                = "Password",
+		aAutologin 		                = "Autologin",
+		aCharacter  			        = "Character",
         startStop                       = "実行停止",
         doPulse                         = "パルス(デバッグ)",
         pulseTime                       = "パルス幅 (ms)",
@@ -1046,7 +1058,11 @@ strings =
 	},   
     ["de"] =
     {
+		aLogin    		                = "LoginName",
+		aPassword  		                = "Password",
+		aAutologin 		                = "Autologin",
         startStop                       = "StartStop",
+		aCharacter  			        = "Character",
         doPulse                         = "Pulse(Debug)",
         pulseTime                       = "Pulse Time (ms)",
         enableLog                       = "Enable Log",
@@ -1389,7 +1405,11 @@ strings =
 	},     
     ["fr"] =
     {
+		aLogin    		                = "LoginName",
+		aPassword  		                = "Password",
+		aAutologin 		                = "Autologin",
         startStop                       = "StartStop",
+		aCharacter  			        = "Character",
         doPulse                         = "Pulse(Debug)",
         pulseTime                       = "Pulse Time (ms)",
         enableLog                       = "Enable Log",
@@ -1732,7 +1752,11 @@ strings =
 	},       
     ["ru"] =
     {
+		aLogin    		                = "LoginName",
+		aPassword  		                = "Password",
+		aAutologin 		                = "Autologin",
         startStop                       = "StartStop",
+		aCharacter  			        = "Character",
         doPulse                         = "Pulse(Debug)",
         pulseTime                       = "Pulse Time (ms)",
         enableLog                       = "Enable Log",
