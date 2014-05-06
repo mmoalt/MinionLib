@@ -161,12 +161,14 @@ strings =
 		AdvancedSettings				= "Advanced Settings",
 		Fightstyle						= "Fightstyle",
 --vendorManager
+		enableSelling					= "AutoSellItems",
 		vendorManager					= "VendorManager",
 		vendorType						= "Item Type",
 		vendorMax						= "Max Item Level",
 		trash							= "Trash",
 		normal							= "Normal",
 		magic							= "Magic",
+		arcane							= "Arcane",
 		artefact						= "Artefact",
 		inventoryl						= "Inventory List",
 		addWhite						= "Add to Whitelist",
@@ -215,7 +217,7 @@ strings =
 		aebonus							= "",
 		
 		--Autoequip
-		enableEquip						= "Enable AutoEquip",
+		enableEquip						= "AutoEquip",
 		AutoEquipSettings				= "AutoEquipSettings",
 		AutoEquipManager				= "AutoEquipManager",
         armor							= "Equip Armors",
@@ -233,7 +235,14 @@ strings =
 		aeonehand						= "One-Hand",
 		aetwohand						= "Two-Hand",
 		weapon							= "Equip Weapons",
-        
+		aearmornormal					= "Equip Normal",
+		aeweaponnormal					= "Equip Normal",
+
+		--potion settings
+		usepotion						= "Use Potion",
+		potiontype						= "Potion Type",
+		potusebelow						= "Use Below %",
+		potionssettings					= "Potions Settings",
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
         addGrindSpot                    = "Add Grind Marker",
@@ -618,12 +627,14 @@ strings =
 		Fightstyle						= "战斗风格",
 
 		--vendorManager
+		enableSelling					= "AutoSellItems",
 		vendorManager					= "VendorManager",
 		vendorType						= "Item Type",
 		vendorMax						= "Max Item Level",
 		trash							= "Trash",
 		normal							= "Normal",
 		magic							= "Magic",
+		arcane							= "Arcane",
 		artefact						= "Artefact",
 		inventoryl						= "Inventory List",
 		addWhite						= "Add to Whitelist",
@@ -672,7 +683,7 @@ strings =
 		aebonus							= "",
 		
 		--Autoequip
-		enableEquip						= "Enable AutoEquip",
+		enableEquip						= "AutoEquip",
 		AutoEquipSettings				= "AutoEquipSettings",
 		AutoEquipManager				= "AutoEquipManager",
         armor							= "Equip Armors",
@@ -690,6 +701,14 @@ strings =
 		aeonehand						= "One-Hand",
 		aetwohand						= "Two-Hand",
 		weapon							= "Equip Weapons",
+		aearmornormal					= "Equip Normal",
+		aeweaponnormal					= "Equip Normal",
+		
+		--potion settings
+		usepotion						= "Use Potion",
+		potiontype						= "Potion Type",
+		potusebelow						= "Use Below %",
+		potionssettings					= "Potions Settings",
 		
         --ffxiv
         botMode                       	= "挂机模式",
@@ -1062,12 +1081,14 @@ strings =
 		Fightstyle						= "戦闘スタイル",
         
 		--vendorManager
+		enableSelling					= "AutoSellItems",
 		vendorManager					= "VendorManager",
 		vendorType						= "Item Type",
 		vendorMax						= "Max Item Level",
 		trash							= "Trash",
 		normal							= "Normal",
 		magic							= "Magic",
+		arcane							= "Arcane",
 		artefact						= "Artefact",
 		inventoryl						= "Inventory List",
 		addWhite						= "Add to Whitelist",
@@ -1116,7 +1137,7 @@ strings =
 		aebonus							= "",
 		
 		--Autoequip
-		enableEquip						= "Enable AutoEquip",
+		enableEquip						= "AutoEquip",
 		AutoEquipSettings				= "AutoEquipSettings",
 		AutoEquipManager				= "AutoEquipManager",
         armor							= "Equip Armors",
@@ -1134,6 +1155,14 @@ strings =
 		aeonehand						= "One-Hand",
 		aetwohand						= "Two-Hand",
 		weapon							= "Equip Weapons",
+		aearmornormal					= "Equip Normal",
+		aeweaponnormal					= "Equip Normal",
+		
+		--potion settings
+		usepotion						= "Use Potion",
+		potiontype						= "Potion Type",
+		potusebelow						= "Use Below %",
+		potionssettings					= "Potions Settings",
 		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot モード",
@@ -1506,12 +1535,14 @@ strings =
 		Fightstyle						= "Fightstyle",
         
 		--vendorManager
+		enableSelling					= "AutoSellItems",
 		vendorManager					= "VendorManager",
 		vendorType						= "Item Type",
 		vendorMax						= "Max Item Level",
 		trash							= "Trash",
 		normal							= "Normal",
 		magic							= "Magic",
+		arcane							= "Arcane",
 		artefact						= "Artefact",
 		inventoryl						= "Inventory List",
 		addWhite						= "Add to Whitelist",
@@ -1560,7 +1591,7 @@ strings =
 		aebonus							= "",
 		
 		--Autoequip
-		enableEquip						= "Enable AutoEquip",
+		enableEquip						= "AutoEquip",
 		AutoEquipSettings				= "AutoEquipSettings",
 		AutoEquipManager				= "AutoEquipManager",
         armor							= "Equip Armors",
@@ -1578,7 +1609,14 @@ strings =
 		aeonehand						= "One-Hand",
 		aetwohand						= "Two-Hand",
 		weapon							= "Equip Weapons",
+		aearmornormal					= "Equip Normal",
+		aeweaponnormal					= "Equip Normal",
 		
+		--potion settings
+		usepotion						= "Use Potion",
+		potiontype						= "Potion Type",
+		potusebelow						= "Use Below %",
+		potionssettings					= "Potions Settings",
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
         addGrindSpot                    = "Add Grind Marker",
@@ -1950,12 +1988,14 @@ strings =
 		Fightstyle						= "Fightstyle",
         
 		--vendorManager
+		enableSelling					= "AutoSellItems",
 		vendorManager					= "VendorManager",
 		vendorType						= "Item Type",
 		vendorMax						= "Max Item Level",
 		trash							= "Trash",
 		normal							= "Normal",
 		magic							= "Magic",
+		arcane							= "Arcane",
 		artefact						= "Artefact",
 		inventoryl						= "Inventory List",
 		addWhite						= "Add to Whitelist",
@@ -2004,7 +2044,7 @@ strings =
 		aebonus							= "",
 		
 		--Autoequip
-		enableEquip						= "Enable AutoEquip",
+		enableEquip						= "AutoEquip",
 		AutoEquipSettings				= "AutoEquipSettings",
 		AutoEquipManager				= "AutoEquipManager",
         armor							= "Equip Armors",
@@ -2022,6 +2062,14 @@ strings =
 		aeonehand						= "One-Hand",
 		aetwohand						= "Two-Hand",
 		weapon							= "Equip Weapons",
+		aearmornormal					= "Equip Normal",
+		aeweaponnormal					= "Equip Normal",
+		
+		--potion settings
+		usepotion						= "Use Potion",
+		potiontype						= "Potion Type",
+		potusebelow						= "Use Below %",
+		potionssettings					= "Potions Settings",
 		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
@@ -2394,12 +2442,14 @@ strings =
 		Fightstyle						= "Fightstyle",
         
 		--vendorManager
+		enableSelling					= "AutoSellItems",
 		vendorManager					= "VendorManager",
 		vendorType						= "Item Type",
 		vendorMax						= "Max Item Level",
 		trash							= "Trash",
 		normal							= "Normal",
 		magic							= "Magic",
+		arcane							= "Arcane",
 		artefact						= "Artefact",
 		inventoryl						= "Inventory List",
 		addWhite						= "Add to Whitelist",
@@ -2448,7 +2498,7 @@ strings =
 		aebonus							= "",
 		
 		--Autoequip
-		enableEquip						= "Enable AutoEquip",
+		enableEquip						= "AutoEquip",
 		AutoEquipSettings				= "AutoEquipSettings",
 		AutoEquipManager				= "AutoEquipManager",
         armor							= "Equip Armors",
@@ -2466,6 +2516,14 @@ strings =
 		aeonehand						= "One-Hand",
 		aetwohand						= "Two-Hand",
 		weapon							= "Equip Weapons",
+		aearmornormal					= "Equip Normal",
+		aeweaponnormal					= "Equip Normal",
+		
+		--potion settings
+		usepotion						= "Use Potion",
+		potiontype						= "Potion Type",
+		potusebelow						= "Use Below %",
+		potionssettings					= "Potions Settings",
 		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
