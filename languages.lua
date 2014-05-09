@@ -246,6 +246,15 @@ strings =
 		potiontype						= "Potion Type",
 		potusebelow						= "Use Below %",
 		potionssettings					= "Potions Settings",
+		
+		--Mail Settings
+		mail 							= "Mail",
+		enableMailing					= "Enable Mailing",
+		mailto							= "Mail To : ",
+		mailsubject						= "Subject : ",
+		mailstack						= "Item Stack Size :",
+		MailManager						= "MailManager",
+		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
         addGrindSpot                    = "Add Grind Marker",
@@ -716,6 +725,13 @@ strings =
 		potiontype						= "Potion Type",
 		potusebelow						= "Use Below %",
 		potionssettings					= "Potions Settings",
+		--Mail Settings
+		mail 							= "Mail",
+		enableMailing					= "Enable Mailing",
+		mailto							= "Mail To : ",
+		mailsubject						= "Subject : ",
+		mailstack						= "Item Stack Size :",
+		MailManager						= "MailManager",
 		
         --ffxiv
         botMode                       	= "挂机模式",
@@ -1175,6 +1191,14 @@ strings =
 		potusebelow						= "Use Below %",
 		potionssettings					= "Potions Settings",
 		
+		--Mail Settings
+		mail 							= "Mail",
+		enableMailing					= "Enable Mailing",
+		mailto							= "Mail To : ",
+		mailsubject						= "Subject : ",
+		mailstack						= "Item Stack Size :",
+		MailManager						= "MailManager",
+		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot モード",
         addGrindSpot                    = "レベルングマーカー追加",
@@ -1632,7 +1656,16 @@ strings =
 		potiontype						= "Potion Type",
 		potusebelow						= "Use Below %",
 		potionssettings					= "Potions Settings",
-        --ffxiv stuff specific stuff
+       
+		--Mail Settings
+		mail 							= "Mail",
+		enableMailing					= "Enable Mailing",
+		mailto							= "Mail To : ",
+		mailsubject						= "Subject : ",
+		mailstack						= "Item Stack Size :",
+		MailManager						= "MailManager",
+		
+	   --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
         addGrindSpot                    = "Add Grind Marker",
         addFishingSpot                  = "Add Fishing Marker",
@@ -2089,6 +2122,14 @@ strings =
 		potiontype						= "Potion Type",
 		potusebelow						= "Use Below %",
 		potionssettings					= "Potions Settings",
+		
+		--Mail Settings
+		mail 							= "Mail",
+		enableMailing					= "Enable Mailing",
+		mailto							= "Mail To : ",
+		mailsubject						= "Subject : ",
+		mailstack						= "Item Stack Size :",
+		MailManager						= "MailManager",
 		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
@@ -2547,6 +2588,14 @@ strings =
 		potiontype						= "Potion Type",
 		potusebelow						= "Use Below %",
 		potionssettings					= "Potions Settings",
+		
+		--Mail Settings
+		mail 							= "Mail",
+		enableMailing					= "Enable Mailing",
+		mailto							= "Mail To : ",
+		mailsubject						= "Subject : ",
+		mailstack						= "Item Stack Size :",
+		MailManager						= "MailManager",
 		
         --ffxiv stuff specific stuff
         botMode                       	= "Bot Mode",
