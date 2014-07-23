@@ -116,6 +116,7 @@ function ValidTable(table)
     return table ~= nil and TableSize(table) > 0
 end
 
+
 function ValidString(string)
 	return type(string) == "string" and #string > 0
 end
