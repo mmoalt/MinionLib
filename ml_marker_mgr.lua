@@ -205,6 +205,39 @@ function ml_marker_mgr.GetNextMarker(markerType, filterLevel)
     
     ml_debug("Error in ml_marker_mgr.GetNextMarker()")       
 end
+function ml_marker_mgr.GetClosestMarker( x, y, z, radius, markertype)
+    		
+	local closestmarker
+	local closestmarkerdistance
+	if ( TableSize(ml_marker_mgr.markerList) > 0 ) then
+		for mtype,_ in pairs(ml_marker_mgr.markerList) do
+			
+			if ( not markertype or mtype == markertype ) then
+				
+				local markerlist = ml_marker_mgr.GetList(mtype, false)
+				
+				if ( TableSize(markerlist) > 0 ) then
+				
+					for name, marker in pairs(markerlist) do
+			
+						mpos = marker:GetPosition()
+						if (TableSize(mpos)>0) then
+							local dist = Distance3D ( mpos.x, mpos.y, mpos.z, x, y, z) 
+							if ( dist < radius and ( closestmarkerdistance == nil or closestmarkerdistance > dist ) ) then
+								closestmarkerdistance = dist
+								closestmarker = marker				
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+    
+    return closestmarker
+end
+
+
 
 --LIST MODIFICATION FUNCTIONS
 function ml_marker_mgr.AddMarker(newMarker)
