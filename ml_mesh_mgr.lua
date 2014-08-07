@@ -329,7 +329,7 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 			
 				-- Save MapMarker on "old" map/mesh
 				--if ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x ~= 0 and ml_marker_mgr.GetClosestMarker( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, 5, GetString("mapMarker")) == nil and NavigationManager:IsOnMesh(ml_mesh_mgr.currentMesh.LastPlayerPosition) ) then
-				if ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x ~= 0 and ml_marker_mgr.GetClosestMarker( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, 5, GetString("mapMarker")) == nil ) then
+				if ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x ~= 0 and ml_marker_mgr.GetClosestMarker( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, 5) == nil ) then
 					
 					if ( not NavigationManager:IsOnMesh(ml_mesh_mgr.currentMesh.LastPlayerPosition) ) then
 						ml_error(" Last position of Player in the last map was NOT on the mesh!")

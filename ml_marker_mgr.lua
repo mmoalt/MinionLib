@@ -15,6 +15,7 @@ ml_marker_mgr.markerList = {}
 ml_marker_mgr.renderList = {}
 ml_marker_mgr.currentMarker = {}		--current marker selected by the GetNextMarker() function
 ml_marker_mgr.currentEditMarker = {}	--current marker displayed in the edit window
+ml_marker_mgr.markersLoaded = false
 --CREATE THIS LIST IN GAME IMPLEMENTATION
 ml_marker_mgr.templateList = {}			--list of marker templates for defining marker types and creating new markers
 --SET THIS PATH IN GAME IMPLEMENTATION
@@ -165,6 +166,7 @@ function ml_marker_mgr.GetNextMarker(markerType, filterLevel)
 			-- compress the list indices so that we can iterate through them properly
             local counter = 1
             for order, marker in pairsByKeys(list) do
+				--d("Order:"..tostring(order)..",Counter:"..tostring(counter)..",Marker:"..tostring(marker:GetName()))
                 list[counter] = marker
                 counter = counter + 1
             end
@@ -173,28 +175,35 @@ function ml_marker_mgr.GetNextMarker(markerType, filterLevel)
 			
             if (ValidTable(ml_marker_mgr.currentMarker)) then
                 if (ml_marker_mgr.currentMarker:GetType() == markerType) then
+					--d("Marker Type:"..tostring(markerType))
                     --get the next marker in the sequence
 					local nextMarker = nil
 					for index, marker in pairsByKeys(list) do
+						--d("Current Order:"..tostring(ml_marker_mgr.currentMarker.order))
 						if (marker.order == ml_marker_mgr.currentMarker.order) then
+							d("Returning index:"..tostring(index+1))
 							nextMarker = list[index+1]
 							break
 						end
 					end
                     if (nextMarker) then
+						--d("nextMarker exists, return it:"..tostring(nextMarker:GetName()))
                         ml_marker_mgr.currentMarker = nextMarker
                         return nextMarker
                     else
                         ml_debug("GetNextMarker end of list - returning first marker for type "..markerType)
+						--d("nextMarker doesnt exist, return first:"..tostring(firstMarker:GetName()))
                         ml_marker_mgr.currentMarker = firstMarker
                         return firstMarker
                     end
                 else
                     ml_debug("Type "..markerType.." is not the same as current marker type. Returning first marker in list")
+					--d("markerType is not equal, return first:"..tostring(firstMarker:GetName()))
                     ml_marker_mgr.currentMarker = firstMarker
                     return firstMarker
                 end
             else
+				--d("Returning first marker"..firstMarker:GetName())
                 ml_marker_mgr.currentMarker = firstMarker
                 return firstMarker
             end
@@ -219,14 +228,17 @@ function ml_marker_mgr.GetClosestMarker( x, y, z, radius, markertype)
 				if ( TableSize(markerlist) > 0 ) then
 				
 					for name, marker in pairs(markerlist) do
-			
-						mpos = marker:GetPosition()
-						if (TableSize(mpos)>0) then
-							local dist = Distance3D ( mpos.x, mpos.y, mpos.z, x, y, z) 
-							if ( dist < radius and ( closestmarkerdistance == nil or closestmarkerdistance > dist ) ) then
-								closestmarkerdistance = dist
-								closestmarker = marker				
+						if ( type(marker) == "table" ) then
+							mpos = marker:GetPosition()
+							if (TableSize(mpos)>0) then
+								local dist = Distance3D ( mpos.x, mpos.y, mpos.z, x, y, z) 
+								if ( dist < radius and ( closestmarkerdistance == nil or closestmarkerdistance > dist ) ) then
+									closestmarkerdistance = dist
+									closestmarker = marker				
+								end
 							end
+						else
+							d("Error in ml_marker_mgr.GetClosestMarker, type(marker) != table")
 						end
 					end
 				end
@@ -236,8 +248,6 @@ function ml_marker_mgr.GetClosestMarker( x, y, z, radius, markertype)
     
     return closestmarker
 end
-
-
 
 --LIST MODIFICATION FUNCTIONS
 function ml_marker_mgr.AddMarker(newMarker)
@@ -297,8 +307,11 @@ function ml_marker_mgr.DeleteMarker(oldMarker)
 		for name, marker in pairs(list) do
 			if (name == oldMarker:GetName()) then
 				list[name] = nil
-				RenderManager:RemoveObject(ml_marker_mgr.renderList[name])
+				--RenderManager:RemoveObject(ml_marker_mgr.renderList[name]) -- this does not work out of some magically unknown reason
 				ml_marker_mgr.renderList[name] = nil
+				ml_marker_mgr.WriteMarkerFile(ml_marker_mgr.markerPath)
+				GUI_WindowVisible(ml_marker_mgr.editwindow.name, false)
+				ml_marker_mgr.DrawMarkerList() -- added this for now to refresh the drawn markers after deleting one..seems to do the job fine
 				return true
 			end
 		end
@@ -314,8 +327,12 @@ function ml_marker_mgr.NewMarker()
 		newMarker = templateMarker:Copy()
 	else
         templateMarker = ml_marker_mgr.templateList[gMarkerMgrType]
-		newMarker = templateMarker:Copy()
-		newMarker:SetName(newMarker:GetType())
+		if (ValidTable(templateMarker)) then
+			newMarker = templateMarker:Copy()
+			newMarker:SetName(newMarker:GetType())
+		else
+			ml_error("No Marker Types defined!")			
+		end
 	end
 	
 	if (ValidTable(newMarker)) then
@@ -344,6 +361,9 @@ function ml_marker_mgr.AddMarkerToList()
 		if (ValidTable(lastMarker)) then
 			marker.order = lastMarker.order + 1
 			ml_marker_mgr.RefreshMarkerNames()
+		else
+			marker.order = 1
+			ml_marker_mgr.RefreshMarkerNames()
 		end
 	end
 end
@@ -353,17 +373,28 @@ function ml_marker_mgr.CleanMarkerOrder(markerType)
     local list = ml_marker_mgr.GetList(markerType, true)
     if (ValidTable(list)) then
         local orderedList = {}
+		
         for name, marker in pairs(list) do
             orderedList[marker.order] = marker
         end
         
         if (ValidTable(orderedList)) then
             local counter = 1
-            for order, marker in pairsByKeys(orderedList) do
+            for order, marker in spairs(orderedList) do
                 marker.order = counter
                 counter = counter + 1
             end
         end
+	
+		for name, marker in pairs(ml_marker_mgr.markerList[markerType]) do
+			for order, modMarker in pairs(orderedList) do
+				if modMarker.name == name then
+					marker.order = order
+				end
+			end
+		end
+		
+		ml_marker_mgr.WriteMarkerFile(ml_marker_mgr.markerPath)
     end
 end
 
@@ -371,6 +402,7 @@ function ml_marker_mgr.ClearMarkerList()
 	ml_marker_mgr.markerList = {}
 	ml_marker_mgr.renderList = {}
 	RenderManager:RemoveAllObjects()
+	ml_marker_mgr.markersLoaded = false
 end
 
 function ml_marker_mgr.DrawMarkerList()
@@ -391,6 +423,8 @@ end
 --IO FUNCTIONS
 function ml_marker_mgr.ReadMarkerFile(path)
 	local markerList = persistence.load(path)
+
+	
 	if (ValidTable(markerList)) then
 		ml_marker_mgr.markerList = markerList
 		for type, list in pairs(ml_marker_mgr.markerList) do
@@ -410,6 +444,7 @@ function ml_marker_mgr.ReadMarkerFile(path)
 		end
 		
 		ml_marker_mgr.markerPath = path
+		ml_marker_mgr.markersLoaded = true
 	else
 		ml_debug("Invalid path specified for marker file")
 	end
@@ -448,7 +483,9 @@ end
 
 function ml_marker_mgr.RefreshMarkerNames()
 	if (ValidTable(ml_marker_mgr.markerList)) then
-		local list = ml_marker_mgr.GetList(gMarkerMgrType, true)
+		ml_marker_mgr.CleanMarkerOrder(gMarkerMgrType)
+		
+		local list = ml_marker_mgr.GetList(gMarkerMgrType, false)
 		if (ValidTable(list)) then
 			local markerNameList = GetComboBoxList(list)
 			local namestring = ""
@@ -479,6 +516,9 @@ end
 
 function ml_marker_mgr.RefreshMarkerList()
 	if (ValidTable(ml_marker_mgr.markerList)) then
+	
+		ml_marker_mgr.CleanMarkerOrder(gMarkerMgrType)
+		
 		local window = GUI_GetWindowInfo(ml_marker_mgr.mainwindow.name)
 		GUI_DeleteGroup(ml_marker_mgr.mainwindow.name, strings[gCurrentLanguage].markerList)
 		
@@ -504,8 +544,15 @@ end
 function ml_marker_mgr.CreateEditWindow(marker)
 	if (ValidTable(marker)) then
 		ml_marker_mgr.currentEditMarker = marker
+		
+		local templateMarker = ml_marker_mgr.templateList[gMarkerMgrType]
+		for fieldName, fieldTable in pairs(templateMarker.fields) do
+			if not (marker:HasField(fieldName)) then
+				marker:AddField(marker:GetFieldType(fieldName), fieldName, marker:GetFieldValue(fieldName))
+			end
+		end
+		
 		GUI_DeleteGroup(ml_marker_mgr.editwindow.name, strings[gCurrentLanguage].markerFields)
-
 		local fieldNames = marker:GetFieldNames()
 		if (ValidTable(fieldNames)) then
 			for _, name in pairsByKeys(fieldNames) do
@@ -514,12 +561,20 @@ function ml_marker_mgr.CreateEditWindow(marker)
 					GUI_NewField(ml_marker_mgr.editwindow.name,name,"Field_"..name, strings[gCurrentLanguage].markerFields)
 				elseif (fieldType == "int") then
 					GUI_NewNumeric(ml_marker_mgr.editwindow.name,name,"Field_"..name, strings[gCurrentLanguage].markerFields)
+				elseif (fieldType == "button") then
+					GUI_NewButton(ml_marker_mgr.editwindow.name,name,"Field_"..name, strings[gCurrentLanguage].markerFields)
+				elseif (fieldType == "checkbox") then
+					GUI_NewCheckbox(ml_marker_mgr.editwindow.name,name,"Field_"..name, strings[gCurrentLanguage].markerFields)
 				end
-				_G["Field_"..name] = marker:GetFieldValue(name)
+				
+				if (fieldType ~= "button") then
+					_G["Field_"..name] = marker:GetFieldValue(name)
+				end
 			end
 		end
 		
 		GUI_UnFoldGroup(ml_marker_mgr.editwindow.name, strings[gCurrentLanguage].markerFields)
+		GUI_SizeWindow(ml_marker_mgr.editwindow.name,ml_marker_mgr.editwindow.w,ml_marker_mgr.editwindow.h)
 		GUI_WindowVisible(ml_marker_mgr.editwindow.name, true)
 	end
 end
@@ -577,11 +632,15 @@ function ml_marker_mgr.GUIVarUpdate(Event, NewVals, OldVals)
 			GUI_WindowVisible(ml_marker_mgr.editwindow.name,false)
 			ml_marker_mgr.currentEditMarker = nil
 		elseif (string.sub(k,1,6) == "Field_") then
+			d("edited field = "..tostring(string.sub(k,7)))
 			local name = string.sub(k,7)
 			if (ValidTable(ml_marker_mgr.currentEditMarker)) then
 				local value = nil
 				if (ml_marker_mgr.currentEditMarker:GetFieldType(name) == "string") then
 					value = v
+				elseif (ml_marker_mgr.currentEditMarker:GetFieldType(name) == "checkbox") then
+					d("value is a checkbox type, v ="..tostring(v))
+					value = tostring(v)
 				else
 					value = tonumber(v)
 				end
