@@ -392,7 +392,7 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 			
 			
 			-- Record Mesh & Gamedata
-			if ( gMeshrec == "1") then
+			if ( gMeshrec == "1" or gMeshChange == "1") then
 				
 				
 				--TODO: REC MESH DATA STUFF N SAVE IT IN THE INFO FILE
