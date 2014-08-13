@@ -13,6 +13,7 @@
 -- 
  
 -- Usefull functions:
+-- ml_mesh_mgr.LoadNavMesh( meshname ) -> loads the wanted mesh by its filename
 -- ml_mesh_mgr.SetDefaultMesh(mapid,mapname)  -> sets this mapname as default for the mapid
 -- ml_mesh_mgr.RemoveDefaultMesh(mapid) -> removes the default for the mapid
  
@@ -219,6 +220,14 @@ function ml_mesh_mgr.RemoveDefaultMesh(mapid)
 	end	
 end
 
+-- Use this to load a new / wanted navmesh
+function ml_mesh_mgr.LoadNavMesh( meshname )
+	if ( meshname ~= nil and meshname ~= 0 and type(meshname) == "string") then
+		ml_mesh_mgr.nextNavMesh = meshname
+		return true
+	end
+	return false
+end
 -- Handles the loading of navmeshes and markerdata when switching maps/meshes
 function ml_mesh_mgr.SwitchNavmesh()
 	
