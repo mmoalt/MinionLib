@@ -12,9 +12,9 @@ function ml_node:Neighbors()
     return self.neighbors
 end
 
-function ml_node:AddNeighbor(id, posTable)
+function ml_node:AddNeighbor(id, neighbor)
     if (not self:GetNeighbor(id)) then
-        self.neighbors[id] = posTable
+        self.neighbors[id] = neighbor
     end
 end
 
@@ -23,12 +23,14 @@ function ml_node:GetNeighbor(id)
 end
 
 function ml_node:GetClosestNeighborPos(origin, id)
-    local neighborPos = self:GetNeighbor(id)
-	if (ValidTable(neighborPos)) then
-		if (TableSize(neighborPos) > 1) then
+    local neighbor = self:GetNeighbor(id)
+	if (ValidTable(neighbor)) then
+		--if the neighbor is valid, check all of our gates and see which gate is closest
+		local gates = neighbor.gates
+		if (TableSize(gates) > 1) then
 			local bestPos = nil
 			local bestDist = 9999999
-			for id, posTable in pairs(neighborPos) do
+			for id, posTable in pairs(gates) do
 				local dist = Distance3D(origin.x, origin.y, origin.z, posTable.x, posTable.y, posTable.z)
 				if (dist < bestDist) then
 					bestPos = posTable
@@ -39,17 +41,20 @@ function ml_node:GetClosestNeighborPos(origin, id)
 			if (ValidTable(bestPos)) then
 				return bestPos
 			end
-		elseif (TableSize(neighborPos == 1)) then
-			return neighborPos[1]
+		elseif (TableSize(gates == 1)) then
+			return gates[1]
 		end
     end
     
     return nil
 end
 
+--OVERRIDE IN GAME MODULE IF NECESSARY.
 function ml_node:DistanceTo(id)
-    if (self:GetNeighbor(id)) then
-        return 1
+	local neighbor = self:GetNeighbor(id)
+    if (neighbor) then
+		local cost = neighbor.cost or 5
+        return cost
     end
     
     return nil

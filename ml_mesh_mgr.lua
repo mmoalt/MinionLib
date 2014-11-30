@@ -9,6 +9,7 @@
 -- Add a "GetPlayerPos() callback, like : ml_mesh_mgr.GetPlayerPos = function () return Player:GetPlayerPos() end
 -- Set "ml_mesh_mgr.averagegameunitsize" to a avg radius of how fat the player is, this val is used for determining the radius around the player to search for markers
 -- Set "ml_mesh_mgr.navData" to a table with world connection nodes
+
 -- Auto-recording Markers:
 -- 
  
@@ -16,6 +17,7 @@
 -- ml_mesh_mgr.LoadNavMesh( meshname ) -> loads the wanted mesh by its filename
 -- ml_mesh_mgr.SetDefaultMesh(mapid,mapname)  -> sets this mapname as default for the mapid
 -- ml_mesh_mgr.RemoveDefaultMesh(mapid) -> removes the default for the mapid
+ 
  
  -- Default mesh "class" that holds all relevant mesh data
 ml_mesh = inheritsFrom(nil)
@@ -33,7 +35,7 @@ end
 
 ml_mesh_mgr = { }
 ml_mesh_mgr.navmeshfilepath = GetStartupPath() .. [[\Navigation\]];
-ml_mesh_mgr.mainwindow = { name = GetString("meshManager"), x = 350, y = 100, w = 275, h = 400}
+ml_mesh_mgr.mainwindow = { name = GetStringML("meshManager"), x = 350, y = 100, w = 275, h = 400}
 ml_mesh_mgr.parentWindow = { Name = "MinionBot" } -- Needs to get re-set
 ml_mesh_mgr.navData = {} -- Holds the data for world navigation
 ml_mesh_mgr.GetMapID = function () return 0 end -- Needs to get re-set
@@ -57,39 +59,39 @@ function ml_mesh_mgr.ModuleInit()
 	end
 	Settings.minionlib.gNoMeshLoad = Settings.minionlib.gNoMeshLoad or "0"
 	
-	GUI_NewWindow(ml_mesh_mgr.mainwindow.name,ml_mesh_mgr.mainwindow.x,ml_mesh_mgr.mainwindow.y,ml_mesh_mgr.mainwindow.w,ml_mesh_mgr.mainwindow.h,"",true)
-	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetString("navmesh"),"gmeshname",GetString("generalSettings"),"")
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("noMeshLoad"),"gNoMeshLoad",GetString("generalSettings"))
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("showrealMesh"),"gShowRealMesh",GetString("generalSettings"))
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("showMesh"),"gShowMesh",GetString("generalSettings"))
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("showPath"),"gShowPath",GetString("generalSettings"))
-	GUI_UnFoldGroup(ml_mesh_mgr.mainwindow.name,GetString("generalSettings"))	
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name, GetString("setEvacPoint"), "setEvacPointEvent",GetString("recoder"))
+	GUI_NewWindow(ml_mesh_mgr.mainwindow.name,ml_mesh_mgr.mainwindow.x,ml_mesh_mgr.mainwindow.y,ml_mesh_mgr.mainwindow.w,ml_mesh_mgr.mainwindow.h)
+	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetStringML("navmesh"),"gmeshname",GetStringML("generalSettings"),"")
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("noMeshLoad"),"gNoMeshLoad",GetStringML("generalSettings"))
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("showrealMesh"),"gShowRealMesh",GetStringML("generalSettings"))
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("showMesh"),"gShowMesh",GetStringML("generalSettings"))
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("showPath"),"gShowPath",GetStringML("generalSettings"))
+	GUI_UnFoldGroup(ml_mesh_mgr.mainwindow.name,GetStringML("generalSettings"))	
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name, GetStringML("setEvacPoint"), "setEvacPointEvent",GetStringML("recoder"))
     RegisterEventHandler("setEvacPointEvent",ml_mesh_mgr.SetEvacPoint)
-	GUI_NewField(ml_mesh_mgr.mainwindow.name,GetString("newMeshName"),"gnewmeshname",GetString("recoder"))
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetString("newMesh"),"newMeshEvent",GetString("recoder"))
+	GUI_NewField(ml_mesh_mgr.mainwindow.name,GetStringML("newMeshName"),"gnewmeshname",GetStringML("recoder"))
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("newMesh"),"newMeshEvent",GetStringML("recoder"))
 	RegisterEventHandler("newMeshEvent",ml_mesh_mgr.ClearNavMesh)
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("recmesh"),"gMeshrec",GetString("recoder"))
-	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetString("recAreaType"),"gRecAreaType",GetString("recoder"),"Road,Lowdanger,Highdanger")-- enum 1,2,3
-	GUI_NewNumeric(ml_mesh_mgr.mainwindow.name,GetString("recAreaSize"),"gRecAreaSize",GetString("recoder"),"1","25")
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("changeMesh"),"gMeshChange",GetString("editor"))
-	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetString("changeAreaType"),"gChangeAreaType",GetString("editor"),"Delete,Road,Lowdanger,Highdanger")
-	GUI_NewNumeric(ml_mesh_mgr.mainwindow.name,GetString("changeAreaSize"),"gChangeAreaSize",GetString("editor"),"1","10")
-	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetString("biDirOffMesh"),"gBiDirOffMesh",GetString("connections"))
-	--GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetString("typeOffMeshSpot"),"gOMCType",GetString("connections"),"Jump,Teleport,Portal,Interact")	
-	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetString("typeOffMeshSpot"),"gOMCType",GetString("connections"),"Jump")	
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetString("addOffMeshSpot"),"offMeshSpotEvent",GetString("connections"))
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("recmesh"),"gMeshrec",GetStringML("recoder"))
+	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetStringML("recAreaType"),"gRecAreaType",GetStringML("recoder"),"Road,Lowdanger,Highdanger")-- enum 1,2,3
+	GUI_NewNumeric(ml_mesh_mgr.mainwindow.name,GetStringML("recAreaSize"),"gRecAreaSize",GetStringML("recoder"),"1","25")
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("changeMesh"),"gMeshChange",GetStringML("editor"))
+	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetStringML("changeAreaType"),"gChangeAreaType",GetStringML("editor"),"Delete,Road,Lowdanger,Highdanger")
+	GUI_NewNumeric(ml_mesh_mgr.mainwindow.name,GetStringML("changeAreaSize"),"gChangeAreaSize",GetStringML("editor"),"1","10")
+	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("biDirOffMesh"),"gBiDirOffMesh",GetStringML("connections"))
+	GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetStringML("typeOffMeshSpot"),"gOMCType",GetStringML("connections"),"Jump,Interact,Teleport,Portal")	
+	--GUI_NewComboBox(ml_mesh_mgr.mainwindow.name,GetStringML("typeOffMeshSpot"),"gOMCType",GetStringML("connections"),"Jump")	
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("addOffMeshSpot"),"offMeshSpotEvent",GetStringML("connections"))
 	RegisterEventHandler("offMeshSpotEvent", ml_mesh_mgr.AddOMC)
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetString("delOffMeshSpot"),"deleteoffMeshEvent",GetString("connections"))
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("delOffMeshSpot"),"deleteoffMeshEvent",GetStringML("connections"))
 	RegisterEventHandler("deleteoffMeshEvent", ml_mesh_mgr.DeleteOMC)
 	
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name,"CreateSingleCell","createSingleCell",GetString("recoder"))
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("createSingleCell"),"createSingleCell",GetStringML("recoder"))
 	RegisterEventHandler("createSingleCell", ml_mesh_mgr.CreateSingleCell)
 	
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetString("saveMesh"),"saveMeshEvent") --GetString("editor"))
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("saveMesh"),"saveMeshEvent") --GetStringML("editor"))
 	RegisterEventHandler("saveMeshEvent",ml_mesh_mgr.SaveMesh)   
 	
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name,"CTRL+M:ChangeMeshRenderDepth","ChangeMeshDepth")
+	--GUI_NewButton(ml_mesh_mgr.mainwindow.name,"CTRL+M:ChangeMeshRenderDepth","ChangeMeshDepth")
 	
 	
 	GUI_SizeWindow(ml_mesh_mgr.mainwindow.name,ml_mesh_mgr.mainwindow.w,ml_mesh_mgr.mainwindow.h)
@@ -122,7 +124,6 @@ function ml_mesh_mgr.ModuleInit()
 	
 	ml_mesh_mgr.loadingMesh = false
 	ml_mesh_mgr.UpdateMeshfiles() --update the mesh-selection-dropdownfield
-	
 end
 
 -- initializes the marker group, this needs to be called from the main.lua's HandleInit, after all possible marker templates were created or when templatelist was updated
@@ -130,13 +131,13 @@ ml_mesh_mgr.registeredevents = {} -- to prevent re-registering of the same event
 function ml_mesh_mgr.InitMarkers()
 	
 	if ( ml_marker_mgr ) then		
-		GUI_DeleteGroup(ml_mesh_mgr.mainwindow.name, GetString("markers"))
+		GUI_DeleteGroup(ml_mesh_mgr.mainwindow.name, GetStringML("markers"))
 				
 		-- create an ADD button for each type
 		if ( ValidString(gMarkerMgrType_listitems) ) then 
 			for mtype in StringSplit(gMarkerMgrType_listitems,",") do
 										
-				GUI_NewButton(ml_mesh_mgr.mainwindow.name,"New "..mtype,"ml_mesh_mgr.NewMarker_"..mtype,GetString("markers"))
+				GUI_NewButton(ml_mesh_mgr.mainwindow.name,"New "..mtype,"ml_mesh_mgr.NewMarker_"..mtype,GetStringML("markers"))
 				if ( not ml_mesh_mgr.registeredevents["ml_mesh_mgr.NewMarker_"..mtype] ) then
 					RegisterEventHandler("ml_mesh_mgr.NewMarker_"..mtype,ml_mesh_mgr.HandleMarkerButtons)
 					ml_mesh_mgr.registeredevents["ml_mesh_mgr.NewMarker_"..mtype] = 1
@@ -145,11 +146,12 @@ function ml_mesh_mgr.InitMarkers()
 			end
 		end
 		-- Select closest marker
-		GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetString("selectClosestMarker"),"ml_mesh_mgr.SelectClosestMarker",GetString("markers"))
+		GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("selectClosestMarker"),"ml_mesh_mgr.SelectClosestMarker",GetStringML("markers"))
 		if ( not ml_mesh_mgr.registeredevents["ml_mesh_mgr.SelectClosestMarker"] ) then
 			RegisterEventHandler("ml_mesh_mgr.SelectClosestMarker",ml_mesh_mgr.HandleMarkerButtons)
 			ml_mesh_mgr.registeredevents["ml_mesh_mgr.SelectClosestMarker"] = 1
 		end
+		GUI_SizeWindow(ml_mesh_mgr.mainwindow.name,ml_mesh_mgr.mainwindow.w,ml_mesh_mgr.mainwindow.h)
 	end
 end
 function ml_mesh_mgr.HandleMarkerButtons( event )
@@ -208,6 +210,7 @@ function ml_mesh_mgr.SetDefaultMesh(mapid,mapname)
 			Settings.minionlib.DefaultMaps = Settings.minionlib.DefaultMaps -- trigger saving of settings
 			d( "New DEFAULT mesh "..mapname.." set for mapID "..tostring(mapid))
 		end
+		
 		-- Updating the .data file
 		if ( ml_mesh_mgr.navmeshfilepath ~= nil and ml_mesh_mgr.navmeshfilepath ~= "" ) then
 			
@@ -249,6 +252,7 @@ function ml_mesh_mgr.SetDefaultMesh(mapid,mapname)
 		
 			d( "Error setting default mesh: navmeshfilepath is nil or empty!")
 		end
+		
 	else
 		d( "Error setting default mesh, mapID or name invalid! : "..tostring(mapid).." / "..mapname)
 	end	
@@ -274,6 +278,7 @@ function ml_mesh_mgr.RemoveDefaultMesh(mapid)
 end
 
 -- Use this to load a new / wanted navmesh
+-- Use this to load a new / wanted navmesh
 function ml_mesh_mgr.LoadNavMesh( meshname )
 	if ( meshname ~= nil and meshname ~= 0 and type(meshname) == "string") then
 		if ( ml_mesh_mgr.loadingMesh == false ) then
@@ -281,13 +286,14 @@ function ml_mesh_mgr.LoadNavMesh( meshname )
 			return true
 		else
 			d("Meshloading still in progress, cannot switch to new navmesh yet..")
-		end	
+		end		
 	end
 	return false
 end
+
 -- Handles the loading of navmeshes and markerdata when switching maps/meshes, gets called on each OnUpdate()
 function ml_mesh_mgr.SwitchNavmesh()
-	
+
 	if (gNoMeshLoad == "1") then
 		return false
 	end
@@ -307,7 +313,6 @@ function ml_mesh_mgr.SwitchNavmesh()
 			else
 				-- Dont reload the obj file again
 				ml_mesh_mgr.loadObjectFile = false
-				
 				-- To prevent (re-)loading or saving of mesh data while the mesh is beeing build/loaded
 				ml_mesh_mgr.loadingMesh = true
 				
@@ -315,24 +320,28 @@ function ml_mesh_mgr.SwitchNavmesh()
 				ml_marker_mgr.ClearMarkerList()
 				
 				if (FileExists(ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".info")) then					
-					ml_marker_mgr.ReadMarkerFile(ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".info")					
+					ml_marker_mgr.ReadMarkerFile(ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".info")            			
 					ml_marker_mgr.DrawMarkerList()
 					ml_marker_mgr.RefreshMarkerNames()					
 				else
+					d("Creating new marker file for "..ml_mesh_mgr.nextNavMesh)
 					ml_marker_mgr.markerPath = ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".info" -- this needs to be set, else the markermanager doesnt work when there is no .info file..should probably be fixed on markermanager side and not here
-					d("WARNING: ml_mesh_mgr.SwitchNavmesh: No Marker-file exist  : "..ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".info")
 					ml_marker_mgr.WriteMarkerFile(ml_marker_mgr.markerPath)
+					if (not FileExists(ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".info")) then
+						ml_error("Marker file creation failed.")
+					end
 				end				
 				
 				-- Update MeshData from .data file
 				if (FileExists(ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".data")) then					
 					ml_mesh_mgr.currentMesh = persistence.load(ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".data")
 					if (not ValidTable(ml_mesh_mgr.currentMesh)) then
-						ml_mesh_mgr.currentMesh = ml_mesh.Create()	
+						ml_mesh_mgr.currentMesh = ml_mesh.Create()						
 						d("WARNING: while loading meshdata-file from "..ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".data")					
 						ml_mesh_mgr.currentMesh.MapID = ml_mesh_mgr.GetMapID()
 						ml_mesh_mgr.currentMesh.AllowedMapIDs[ml_mesh_mgr.currentMesh.MapID] = ml_mesh_mgr.currentMesh.MapID						
 						ml_mesh_mgr.currentMesh.Name = ml_mesh_mgr.GetMapName()
+						
 					else
 						-- check if the loaded currentMesh.mapID is good 
 						if ( ml_mesh_mgr.currentMesh.MapID == 0 ) then
@@ -365,7 +374,7 @@ function ml_mesh_mgr.SwitchNavmesh()
 					end
 				else
 					d("WARNING: ml_mesh_mgr.SwitchNavmesh: No Data-file exist : "..ml_mesh_mgr.navmeshfilepath..ml_mesh_mgr.nextNavMesh..".data")
-					ml_mesh_mgr.currentMesh = ml_mesh.Create()
+					ml_mesh_mgr.currentMesh = ml_mesh.Create()					
 					ml_mesh_mgr.currentMesh.MapID = ml_mesh_mgr.GetMapID()
 					ml_mesh_mgr.currentMesh.AllowedMapIDs[ml_mesh_mgr.currentMesh.MapID] = ml_mesh_mgr.currentMesh.MapID
 					ml_mesh_mgr.currentMesh.Name = ml_mesh_mgr.GetMapName()
@@ -381,6 +390,7 @@ function ml_mesh_mgr.SwitchNavmesh()
 		end
 		ml_mesh_mgr.nextNavMesh = nil
 	end
+	
 	return false
 end
 
@@ -398,9 +408,8 @@ end
 
 -- Main loop
 function ml_mesh_mgr.OnUpdate( tickcount )
-	
 	local navstate = NavigationManager:GetNavMeshState()
-		
+	
 	if ( ml_mesh_mgr.loadingMesh or 
 		navstate == GLOBAL.MESHSTATE.MESHBUILDING or 
 		ml_mesh_mgr.GetMapID() == nil or 
@@ -412,18 +421,16 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 	
 	-- Log Info
 	if ( navstate == GLOBAL.MESHSTATE.MESHEMPTY ) then
-		ml_log("WARNING: NO NAVMESH LOADED! -> SELECT A NAVMESH IN THE MESHMANAGER FOR THIS ZONE")
+		ml_debug("WARNING: NO NAVMESH LOADED! -> SELECT A NAVMESH IN THE MESHMANAGER FOR THIS ZONE")
 	elseif ( navstate == GLOBAL.MESHSTATE.MESHREADY ) then
 		if ( not Player.onmesh ) then			
-			ml_log("WARNING: PLAYER IS NOT STANDING ON THE NAVMESH! ")
+			ml_debug("WARNING: PLAYER IS NOT STANDING ON THE NAVMESH! ")
 		end
 	end
 	
 	-- Init default mesh	
 	if ( ml_mesh_mgr.currentMesh.MapID == 0 ) then
-				
 		ml_mesh_mgr.LoadNavMeshForCurrentMap()		
-		
 	else
 	-- Check for changed MapID
 		if ( ml_mesh_mgr.currentMesh.MapID ~= ml_mesh_mgr.GetMapID() and ml_mesh_mgr.currentMesh.AllowedMapIDs[ml_mesh_mgr.GetMapID()] == nil and gNoMeshLoad == "0") then
@@ -434,7 +441,7 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 			if ( gMeshrec == "1" ) then
 			
 				-- Save MapMarker on "old" map/mesh
-				--if ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x ~= 0 and ml_marker_mgr.GetClosestMarker( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, 5, GetString("mapMarker")) == nil and NavigationManager:IsOnMesh(ml_mesh_mgr.currentMesh.LastPlayerPosition) ) then
+				--if ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x ~= 0 and ml_marker_mgr.GetClosestMarker( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, 5, GetStringML("mapMarker")) == nil and NavigationManager:IsOnMesh(ml_mesh_mgr.currentMesh.LastPlayerPosition) ) then
 				if ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x ~= 0 and ml_marker_mgr.GetClosestMarker( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, 5) == nil ) then
 					
 					if ( not NavigationManager:IsOnMesh(ml_mesh_mgr.currentMesh.LastPlayerPosition) ) then
@@ -443,9 +450,9 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 					
 					-- Add MapMarker in mesh
 					local newMarker = ml_marker:Create("MapMarker")
-					newMarker:SetType(GetString("mapMarker"))
+					newMarker:SetType(GetStringML("mapMarker"))
 					newMarker:AddField("int", "Target MapID", ml_mesh_mgr.GetMapID())
-					newMarker:SetName(tostring(ml_mesh_mgr.currentMesh.MapID).."to"..tostring(ml_mesh_mgr.GetMapID()))
+					newMarker:SetName(tostring(ml_mesh_mgr.currentMesh.Name).." to "..tostring(ml_mesh_mgr.GetMapName()))
 					if ( ml_marker_mgr.GetMarker(newMarker:GetName()) ~= nil ) then
 						--add a random number onto the name until the string is unique
 						local name = ""
@@ -469,30 +476,18 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 			end
 						
 			-- load new mesh
+			
 			ml_mesh_mgr.LoadNavMeshForCurrentMap()			
 			
 		else			
 			-- update currentmeshdata position
-			if ( TableSize(ml_mesh_mgr.GetPlayerPos()) > 0 and ml_mesh_mgr.GetPlayerPos().x > 0 ) then
-				
-				--[[if ( gMeshrec == "1" and ml_mesh_mgr.currentMesh.LastPlayerPosition.x > 0 ) then
-					-- check if we moved beyond the transitionpoint distance, like when we were walking though a portal or door but are still in the same map
-					
-					local dist = Distance3D ( ml_mesh_mgr.currentMesh.LastPlayerPosition.x, ml_mesh_mgr.currentMesh.LastPlayerPosition.y, ml_mesh_mgr.currentMesh.LastPlayerPosition.z, ml_mesh_mgr.GetPlayerPos().x, ml_mesh_mgr.GetPlayerPos().y, ml_mesh_mgr.GetPlayerPos().z) 
-					if ( dist > ml_mesh_mgr.transitionthreshold ) then
-						-- TODO auto place an OMC here? be sure to check for player moved manually outside & back into the mesh, turning on and off rec and other fuckups
-						-- d("A larger movement was detected ( "..tostring(dist).." adding an OMC ")
-						
-						
-					end
-				end --]]
-				
-				-- Update last position
-				ml_mesh_mgr.currentMesh.LastPlayerPosition = { 
-					x= ml_mesh_mgr.GetPlayerPos().x, 
-					y= ml_mesh_mgr.GetPlayerPos().y, 
-					z= ml_mesh_mgr.GetPlayerPos().z, 
-					h= ml_mesh_mgr.GetPlayerPos().h 
+			local myPos = ml_mesh_mgr.GetPlayerPos()
+			if (ValidTable(myPos)) then
+				ml_mesh_mgr.currentMesh.LastPlayerPosition = {				
+					x = myPos.x, 
+					y = myPos.y, 
+					z = myPos.z, 
+					h = myPos.h 
 				}
 			end
 			
@@ -506,18 +501,16 @@ function ml_mesh_mgr.OnUpdate( tickcount )
 				end
 			end	
 			
+			if ( gMeshrec == "0" and gMeshChange == "0" and  MeshManager:IsKeyPressed(162) and MeshManager:IsKeyPressed(2)) then
+				ml_mesh_mgr.CreateSingleCell()
+			end	
+			
 			-- Record Mesh & Gamedata
 			if ( gMeshrec == "1" or gMeshChange == "1") then
-				
-				
-				--TODO: REC MESH DATA STUFF N SAVE IT IN THE INFO FILE
-				
-				
-				
-				
 				-- Key-Input-Handler
 				-- 162 = Left CTRL + Left Mouse
 				if ( MeshManager:IsKeyPressed(162) and MeshManager:IsKeyPressed(1)) then --162 is the integervalue of the virtualkeycode (hex)
+
 					MeshManager:RecForce(true)
 				else
 					MeshManager:RecForce(false)
@@ -595,7 +588,7 @@ function ml_mesh_mgr.SaveMesh()
 			d("Saving NavMesh : "..filename)		
 			if (NavigationManager:SaveNavMesh(filename)) then
 								
-				-- Saving of Default Mesh
+				-- Saving of Default Mesh				
 				ml_mesh_mgr.UpdateDefaultMesh(ml_mesh_mgr.currentMesh.MapID,filename)
 				
 				-- Updating mapIDs (this has to be seperated, else the allowedmapids will get the map of the new zone when zoning while recording is on nad the "old" mesh is autosaved
@@ -604,14 +597,13 @@ function ml_mesh_mgr.SaveMesh()
 				else
 					ml_mesh_mgr.currentMesh.AllowedMapIDs[ml_mesh_mgr.GetMapID()] = ml_mesh_mgr.GetMapID()
 				end
-				-- Save MeshData				
-				d("Saving MeshData..")
-				ml_mesh_mgr.SaveMeshData(filename)
-									
-							
-				-- Update UI
-				gmeshname = ml_mesh_mgr.nextNavMesh
 				
+				-- Save MeshData				
+				d("Saving MeshData..")				
+				ml_mesh_mgr.SaveMeshData(filename)
+				
+				-- Update UI
+				gmeshname = ml_mesh_mgr.nextNavMesh				
 				ml_mesh_mgr.currentMesh.MapID = 0 -- triggers the reloading of the default mesh
 				
 			else
@@ -627,9 +619,7 @@ end
 -- Saves the additional mesh data into to the data file
 function ml_mesh_mgr.SaveMeshData(filename)
 	persistence.store(ml_mesh_mgr.navmeshfilepath..filename..".data", ml_mesh_mgr.currentMesh)
-	
 end
-
 
 -- Deletes the current meshdata and resets the meshmanagerdata
 function ml_mesh_mgr.ClearNavMesh()
@@ -660,7 +650,6 @@ function ml_mesh_mgr.GUIVarUpdate(Event, NewVals, OldVals)
 			else
 				ml_mesh_mgr.ClearNavMesh()
 			end
-			
 		elseif( k == "gShowRealMesh") then
 			if (v == "1") then
 				NavigationManager:ShowNavMesh(true)
@@ -759,9 +748,9 @@ function ml_mesh_mgr.AddOMC()
 			omctype = 0
 		elseif ( gOMCType == "Teleport" ) then
 			omctype = 1
-		elseif ( gOMCType == "Interact" ) then
-			omctype = 2
 		elseif ( gOMCType == "Portal" ) then
+			omctype = 2
+		elseif ( gOMCType == "Interact" ) then
 			omctype = 3
 		end
 		
@@ -783,6 +772,11 @@ end
 -- Handler for different OMC types
 function ml_mesh_mgr.HandleOMC( event, OMCType ) 	
 	d("OMC REACHED : "..tostring(OMCType))
+	if (OMCType == "OMC_INTERACT") then
+		Player:Stop()
+		local newTask = ffxiv_mesh_interact.Create()
+		ml_task_hub:Add(newTask, IMMEDIATE_GOAL, TP_IMMEDIATE)
+	end
 	--Player:StopMovement()	
 end
 
@@ -803,6 +797,7 @@ function ml_mesh_mgr.ToggleMenu()
         if (wnd) then
             GUI_MoveWindow( ml_mesh_mgr.mainwindow.name, wnd.x+wnd.width,wnd.y) 
             GUI_WindowVisible(ml_mesh_mgr.mainwindow.name,true)
+			GUI_SizeWindow(ml_mesh_mgr.mainwindow.name,ml_mesh_mgr.mainwindow.w,ml_mesh_mgr.mainwindow.h)
         end
         
         ml_mesh_mgr.visible = true

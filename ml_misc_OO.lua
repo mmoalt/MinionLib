@@ -113,7 +113,33 @@ function wtround( num, idp )
   return math.floor( num * mult + 0.5 ) / mult
 end
 
-function deepcopy( object )
+function shallowcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+function outputTable(t)
+	for k,v in pairs(t) do
+		if (type(v) == "table") then
+			outputTable(v)
+		else
+			d((k).."="..tostring(v))	
+		end
+	end
+end
+
+function deepcopy( object, skipMT )
+	local skipMT = skipMT or true
+	
     local lookup_table = {}
     local function _copy( object )
         if type( object ) ~= "table" then
@@ -126,7 +152,9 @@ function deepcopy( object )
         for index, value in pairs( object ) do
             new_table[_copy( index )] = _copy( value )
         end
-        return setmetatable(new_table, getmetatable( object ) )
+		if (not skipMT) then
+			return setmetatable(new_table, getmetatable( object ) )
+		end
     end
     return _copy( object )
 end

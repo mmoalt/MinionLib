@@ -7,6 +7,26 @@ function table_invert(t)
    return s
 end
 
+function deepcompare(t1,t2,ignore_mt)
+	local ty1 = type(t1)
+	local ty2 = type(t2)
+	if ty1 ~= ty2 then return false end
+	-- non-table types can be directly compared
+	if ty1 ~= 'table' and ty2 ~= 'table' then return t1 == t2 end
+	-- as well as tables which have the metamethod __eq
+	local mt = getmetatable(t1)
+	if not ignore_mt and mt and mt.__eq then return t1 == t2 end
+	for k1,v1 in pairs(t1) do
+		local v2 = t2[k1]
+		if v2 == nil or not deepcompare(v1,v2) then return false end
+	end
+	for k2,v2 in pairs(t2) do
+		local v1 = t1[k2]
+		if v1 == nil or not deepcompare(v1,v2) then return false end
+	end
+	return true
+end
+
 -- takes in a % number and gives back a random number near that value, for randomizing skill usage at x% hp
 function randomize(val)
 	if ( val <= 100 and val > 0) then
@@ -114,7 +134,6 @@ function LinesFrom(file)
   return cleanedLines 
 end
 
-
 function StringSplit(s,sep)
 	local lasti, done, g = 1, false, s:gmatch('(.-)'..sep..'()')
 	return function()
@@ -219,7 +238,6 @@ function ValidTable(table)
     return table ~= nil and TableSize(table) > 0
 end
 
-
 function ValidString(string)
 	return type(string) == "string" and #string > 0
 end
@@ -288,11 +306,9 @@ function pairsByKeys (t, f)
   table.sort(a, f)
   local i = 0      -- iterator variable
   local iter = function ()   -- iterator function
-
 	i = i + 1
 	if a[i] == nil then return nil
 	else return a[i], t[a[i]]
-
 	end
   end
   return iter
