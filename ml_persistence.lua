@@ -157,9 +157,7 @@ writers = {
 			end;
 		end;
 	["function"] = function (file, item)
-			-- Does only work for "normal" functions, not those
-			-- with upvalues or c functions
-			
+			file:write("nil --[[thread]]\n");			
 		end;
 	["thread"] = function (file, item)
 			file:write("nil --[[thread]]\n");

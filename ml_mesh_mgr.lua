@@ -41,7 +41,7 @@ ml_mesh_mgr.navData = {} -- Holds the data for world navigation
 ml_mesh_mgr.GetMapID = function () return 0 end -- Needs to get re-set
 ml_mesh_mgr.GetMapName = function () return "NoName" end -- Needs to get re-set
 ml_mesh_mgr.GetPlayerPos = function () return { x=0, y=0, z=0, h=0 } end -- Needs to get re-set
-ml_mesh_mgr.SetEvacPoint = function () return end -- Needs to get set
+ml_mesh_mgr.SetEvacPoint = function () return 0 end -- Needs to get set
 ml_mesh_mgr.nextNavMesh = nil -- Holds the navmeshfilename that should get loaded
 ml_mesh_mgr.currentMesh = ml_mesh.Create()
 ml_mesh_mgr.loadingMesh = false
@@ -66,8 +66,8 @@ function ml_mesh_mgr.ModuleInit()
 	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("showMesh"),"gShowMesh",GetStringML("generalSettings"))
 	GUI_NewCheckbox(ml_mesh_mgr.mainwindow.name,GetStringML("showPath"),"gShowPath",GetStringML("generalSettings"))
 	GUI_UnFoldGroup(ml_mesh_mgr.mainwindow.name,GetStringML("generalSettings"))	
-	GUI_NewButton(ml_mesh_mgr.mainwindow.name, GetStringML("setEvacPoint"), "setEvacPointEvent",GetStringML("recoder"))
-    RegisterEventHandler("setEvacPointEvent",ml_mesh_mgr.SetEvacPoint)
+	GUI_NewButton(ml_mesh_mgr.mainwindow.name, GetStringML("setEvacPoint"), "ml_mesh_mgr.SetEvacPoint",GetStringML("recoder"))
+
 	GUI_NewField(ml_mesh_mgr.mainwindow.name,GetStringML("newMeshName"),"gnewmeshname",GetStringML("recoder"))
 	GUI_NewButton(ml_mesh_mgr.mainwindow.name,GetStringML("newMesh"),"newMeshEvent",GetStringML("recoder"))
 	RegisterEventHandler("newMeshEvent",ml_mesh_mgr.ClearNavMesh)
@@ -833,6 +833,15 @@ function ml_mesh_mgr.SetupNavNodes()
 	end
 end
 
+function ml_mesh_mgr.HandleButtons( Event, Button )	
+	if ( Event == "GUI.Item" ) then
+		if (string.find(Button,"ml_mesh_mgr.") ~= nil) then
+			ExecuteFunction(Button)
+		end
+	end
+end
+
+RegisterEventHandler("GUI.Item",ml_mesh_mgr.HandleButtons )
 RegisterEventHandler("ToggleMeshManager", ml_mesh_mgr.ToggleMenu)
 RegisterEventHandler("GUI.Update",ml_mesh_mgr.GUIVarUpdate)
 RegisterEventHandler("Module.Initalize",ml_mesh_mgr.ModuleInit)
