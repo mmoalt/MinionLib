@@ -48,6 +48,7 @@ ml_mesh_mgr.loadingMesh = false
 ml_mesh_mgr.loadObjectFile = false
 ml_mesh_mgr.averagegameunitsize = 50
 ml_mesh_mgr.OMC = 0
+ml_mesh_mgr.useQuaternion = false -- Enable this for using "3d-heading" (GW2) or false for normal "1-axis heading" (ESO,FFXIV)
 ml_mesh_mgr.transitionthreshold = 10 -- distance when to autoset an OMC, like when we we'r walking though a portal or door but are still in the same map
 
 
@@ -735,49 +736,56 @@ end
 -- add offmesh connection
 function ml_mesh_mgr.AddOMC()
 	local pos = Player.pos
-	
+
 	ml_mesh_mgr.OMC = ml_mesh_mgr.OMC+1
 	if (ml_mesh_mgr.OMC == 1 ) then
 		ml_mesh_mgr.OMCP1 = pos
-		ml_mesh_mgr.OMCP1.y = ml_mesh_mgr.OMCP1.y
+
+		
 	elseif (ml_mesh_mgr.OMC == 2 ) then
 		ml_mesh_mgr.OMCP2 = pos
-		ml_mesh_mgr.OMCP2.y = ml_mesh_mgr.OMCP2.y
+
+		
 		local omctype
 		if ( gOMCType == "Jump" ) then
-			omctype = 0
+			omctype = 8
+		elseif ( gOMCType == "Walk" ) then
+			omctype = 9
+		elseif ( gOMCType == "Lift" ) then
+			omctype = 13
 		elseif ( gOMCType == "Teleport" ) then
-			omctype = 1
-		elseif ( gOMCType == "Portal" ) then
-			omctype = 2
+			omctype = 10
+
+
 		elseif ( gOMCType == "Interact" ) then
-			omctype = 3
+			omctype = 11
+		elseif ( gOMCType == "Portal" ) then			
+			omctype = 12
 		end
 		
-		if ( gBiDirOffMesh == "0" ) then
-			d(MeshManager:AddOffMeshConnection(ml_mesh_mgr.OMCP1,ml_mesh_mgr.OMCP2,false,omctype))
+		-- Default Short Range Jump
+		if ( ml_mesh_mgr.useQuaternion == true ) then
+			if ( gBiDirOffMesh == "0" ) then
+				MeshManager:AddOffMeshConnection(ml_mesh_mgr.OMCP1,ml_mesh_mgr.OMCP2,false,omctype, {x=ml_mesh_mgr.OMCP1.hx,y=ml_mesh_mgr.OMCP1.hy,z=ml_mesh_mgr.OMCP1.hz},{x=ml_mesh_mgr.OMCP2.hx,y=ml_mesh_mgr.OMCP2.hy,z=ml_mesh_mgr.OMCP2.hz})
+			else
+				MeshManager:AddOffMeshConnection(ml_mesh_mgr.OMCP1,ml_mesh_mgr.OMCP2,true,omctype, {x=ml_mesh_mgr.OMCP1.hx,y=ml_mesh_mgr.OMCP1.hy,z=ml_mesh_mgr.OMCP1.hz},{x=ml_mesh_mgr.OMCP2.hx,y=ml_mesh_mgr.OMCP2.hy,z=ml_mesh_mgr.OMCP2.hz})
+			end
 		else
-			d(MeshManager:AddOffMeshConnection(ml_mesh_mgr.OMCP1,ml_mesh_mgr.OMCP2,true,omctype))
+			if ( gBiDirOffMesh == "0" ) then
+				MeshManager:AddOffMeshConnection(ml_mesh_mgr.OMCP1,ml_mesh_mgr.OMCP2,false,omctype, {x=ml_mesh_mgr.OMCP1.h,0,0},{x=ml_mesh_mgr.OMCP2.h,0,0})
+			else
+				MeshManager:AddOffMeshConnection(ml_mesh_mgr.OMCP1,ml_mesh_mgr.OMCP2,true,omctype, {x=ml_mesh_mgr.OMCP1.h,0,0},{x=ml_mesh_mgr.OMCP2.h,0,0})
+			end
 		end
 		ml_mesh_mgr.OMC = 0
 	end	
 end
+
 -- delete offmesh connection
 function ml_mesh_mgr.DeleteOMC()
 	local pos = Player.pos
 	MeshManager:DeleteOffMeshConnection(pos)
 	ml_mesh_mgr.OMC = 0
-end
-
--- Handler for different OMC types
-function ml_mesh_mgr.HandleOMC( event, OMCType ) 	
-	d("OMC REACHED : "..tostring(OMCType))
-	if (OMCType == "OMC_INTERACT") then
-		Player:Stop()
-		local newTask = ffxiv_mesh_interact.Create()
-		ml_task_hub:Add(newTask, IMMEDIATE_GOAL, TP_IMMEDIATE)
-	end
-	--Player:StopMovement()	
 end
 
 function ml_mesh_mgr.CreateSingleCell()
@@ -846,5 +854,4 @@ RegisterEventHandler("ToggleMeshManager", ml_mesh_mgr.ToggleMenu)
 RegisterEventHandler("GUI.Update",ml_mesh_mgr.GUIVarUpdate)
 RegisterEventHandler("Module.Initalize",ml_mesh_mgr.ModuleInit)
 RegisterEventHandler("Gameloop.MeshReady",ml_mesh_mgr.NavMeshUpdate)
-RegisterEventHandler("Gameloop.OffMeshConnectionReached",ml_mesh_mgr.HandleOMC)
 RegisterEventHandler("ChangeMeshDepth", function() RenderManager:ChangeMeshDepth() end)
